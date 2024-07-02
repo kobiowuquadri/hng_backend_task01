@@ -6,6 +6,10 @@ const port = 3000
 
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY
 
+app.get('/', (req, res) => {
+   res.json({success: true, message: "Backend Connected Successfully."});
+})
+
 app.get('/api/hello', async (req, res) => {
   const { visitor_name } = req.query
   try {
