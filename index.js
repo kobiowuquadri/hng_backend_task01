@@ -22,11 +22,13 @@ app.get('/api/hello', async (req, res) => {
 
     const weather = await axios.get(`http://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${userIp}`)
     const temperature = weather.data.current.temp_c
+
+    const plainVisitorName = String(visitor_name)
     
     res.json({
       client_ip: userIp,
       location,
-      greeting: `Hello, ${visitor_name}! The temperature is ${temperature} degrees Celsius in ${location}`
+      greeting: `Hello, ${plainVisitorName}! The temperature is ${temperature} degrees Celsius in ${location}`
     })
   }
   catch(err){
