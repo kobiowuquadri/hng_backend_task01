@@ -1,11 +1,14 @@
 const express = require('express')
 const axios = require("axios")
+const requestIp = require('request-ip')
 require('dotenv').config()
 
 const app = express()
 const port = 3000
 
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY
+
+app.use(requestIp.mw())
 
 app.get('/', (req, res) => {
    res.json({success: true, message: "Backend Connected Successfully."});
@@ -14,9 +17,12 @@ app.get('/', (req, res) => {
 app.get('/api/hello', async (req, res) => {
   const { visitor_name } = req.query
   try {
-    const { publicIpv4 } = await import('public-ip')
-    const userIp = await publicIpv4()
-    
+    let userIp = req.clientIp
+
+    if (userIp === '::1' || userIp === '127.0.0.1') {
+      userIp = '8.8.8.8' // Example public IP address for testing
+    }
+
     const userGeo = await axios.get(`http://api.weatherapi.com/v1/ip.json?key=${WEATHER_API_KEY}&q=${userIp}`)
     const location = userGeo.data.city
 
